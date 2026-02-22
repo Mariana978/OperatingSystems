@@ -475,6 +475,9 @@ public final class SystemOS implements Runnable{
     
     public double calcCPUUtilization() {
         
+        //PRUEBA COMMIT 22/02/2026
+        
+        
         return 0; // Mantiene el cálculo correcto
     }
     
