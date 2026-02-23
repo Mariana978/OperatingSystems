@@ -18,8 +18,29 @@ public class SJF_NP extends Scheduler{
    
     @Override
     public void getNext(boolean cpuEmpty) {
+        if (!cpuEmpty || processes.isEmpty()) {
+            return;
+        }
+
+        Process shortest = processes.get(0);
+
+        for (Process p : processes) {
+
+            int pTime = p.getRemainingTimeInCurrentBurst();
+            int sTime = shortest.getRemainingTimeInCurrentBurst();
+
+            if (pTime < sTime) {
+                shortest = p;
+            } 
+            else if (pTime == sTime) {
+                shortest = tieBreaker(p, shortest);
+            }
+        }
+
+        processes.remove(shortest);
+        os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, shortest);
         
-       //Insert code here
+        //Insert code here
         
     }
     
@@ -30,3 +51,4 @@ public class SJF_NP extends Scheduler{
     public void IOReturningProcess(boolean cpuEmpty) {} //Non-preemtive
     
 }
+
