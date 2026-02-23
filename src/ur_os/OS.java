@@ -12,7 +12,7 @@ public class OS {
 
     private SchedulerType currentSchedulerType;
 
-    public final TieBreakerType SCHEDULER_TIEBREAKER_TYPE = TieBreakerType.LARGEST_PID;
+    public final TieBreakerType SCHEDULER_TIEBREAKER_TYPE = TieBreakerType.SMALLEST_PID;
 
     
 
@@ -86,3 +86,4 @@ public class OS {
         System.out.println(rq.toString());
     }
 }
+
