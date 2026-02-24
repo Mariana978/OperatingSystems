@@ -53,29 +53,17 @@ public class OS {
                 break;
 
             case SCHEDULER_CPU_TO_RQ:
-
                 Process temp = cpu.extractProcess();
-
                 rq.addProcess(temp);
-
                 if (p != null) {
-
                     cpu.addProcess(p);
-
                     System.out.println("Process " + p.getPid() + " was loaded!");
-
                 }
-
                 break;
 
-
-
             case SCHEDULER_RQ_TO_CPU:
-
                 cpu.addProcess(p);
-
                 System.out.println("Process " + p.getPid() + " was loaded!");
-
                 break;
         }
     }

@@ -474,49 +474,107 @@ public final class SystemOS implements Runnable{
     }
     
     public double calcCPUUtilization() {
-        
         //PRUEBA COMMIT 22/02/2026
-        
-        
-        return 0; // Mantiene el cálculo correcto
+        if (execution.isEmpty()) return 0;
+        int ciclosOcupados = 0;
+        for (Integer pid : execution) {
+            if (pid != -1) { // -1 significa CPU libre
+                ciclosOcupados++;
+            }
+        }
+        double utilizacion = (double) ciclosOcupados / execution.size();
+        return utilizacion;
     }
     
-    public double calcTurnaroundTime() {
-        
     
-        return 0;
+    public double calcTurnaroundTime() {
+        int suma = 0;
+        int cantidad = 0;
+        for (int i = 0; i < processes.size(); i++) {
+            Process p = processes.get(i);
+            if (p.isFinished()) {
+                int pid = p.getPid();
+                int llegada = p.getTime_init();
+                int ultimoUso = -1;
+                for (int j = 0; j < execution.size(); j++) {
+                    if (execution.get(j) == pid) {
+                        ultimoUso = j;
+                    }
+                }
+                if (ultimoUso != -1) {
+                    int turnaround = (ultimoUso + 1) - llegada;
+                    suma += turnaround;
+                    cantidad++;
+                }
+            }
+        }
+        if (cantidad == 0) return 0;
+        return (double) suma / cantidad;
     }
     
     public double calcThroughput() {
-        if (processes.isEmpty()) return 0;
-    
-        return 0; // Procesos terminados por unidad de tiempo
+        int terminados = 0;
+        for (int i = 0; i < processes.size(); i++) {
+        Process p = processes.get(i);
+        if (p.isFinished()) {
+                terminados++;
+            }
+        }
+        if (clock == 0) {
+            return 0;
+        }
+        double resultado = (double) terminados / clock;
+        return resultado;
     }
     
+    
     public double calcAvgWaitingTime() {
+           //FALTA ESTE!!
            
         return 0;
     }
     
     //Everytime a process is taken out from memory, when a interruption occurs
     public double calcAvgContextSwitches() {
-        
+        //FALTA ESTE!!
+           
         return 0;
     }
     
     
     //Just context switches based on the execution timeline
     public double calcAvgContextSwitches2() {
-        
+        //FALTA ESTE!!
+           
         return 0;
     }
     
     
     public double calcResponseTime() {
-        
-        return 0;
-
+        int suma = 0;
+        int cantidad = 0;
+        for (int i = 0; i < processes.size(); i++) {
+            Process p = processes.get(i);
+            int pid = p.getPid();
+            int llegada = p.getTime_init();
+            int primeraVez = -1;
+            for (int j = 0; j < execution.size(); j++) {
+                if (execution.get(j) == pid) {
+                    primeraVez = j;
+                    break;
+                }
+            }
+            if (primeraVez != -1) {
+                int response = primeraVez - llegada;
+                suma += response;
+                cantidad++;
+            }
+        }
+        if (cantidad == 0) return 0;
+        return (double) suma / cantidad;
     }
+    
+    
     public void compareFiles(String filePath1, String filePath2) {
         try (BufferedReader reader1 = new BufferedReader(new FileReader(filePath1));
              BufferedReader reader2 = new BufferedReader(new FileReader(filePath2))) {

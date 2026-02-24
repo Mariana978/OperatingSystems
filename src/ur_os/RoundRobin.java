@@ -4,6 +4,9 @@
  */
 package ur_os;
 
+import static ur_os.InterruptType.SCHEDULER_CPU_TO_RQ;
+import static ur_os.InterruptType.SCHEDULER_RQ_TO_CPU;
+
 /**
  *
  * @author prestamour
@@ -39,10 +42,36 @@ public class RoundRobin extends Scheduler{
    
     @Override
     public void getNext(boolean cpuEmpty) {
-        //Insert code here
+        //si CPU vacío
+        if (cpuEmpty) {
+            if (!processes.isEmpty()) {
+                Process siguiente = processes.removeFirst();
+                os.interrupt(SCHEDULER_RQ_TO_CPU, siguiente);
+                addContextSwitch();
+                resetCounter();
+            }
+            return;
+        }
+        // CPU ocupaditoo
+        cont++;
+        Process actual = os.getProcessInCPU();
+        if (actual.isFinished()) {
+            resetCounter();
+            return;
+        }
+        // Si no ha llegado al quantum, siguee
+        if (cont < q) {
+            return;
+        }
+        // Se acabó el quantum
+        if (!processes.isEmpty()) {
+            Process siguiente = processes.removeFirst();
+            os.interrupt(SCHEDULER_CPU_TO_RQ, siguiente);
+            addContextSwitch();
+        }
+        resetCounter();
     }
-    
-    
+ 
     @Override
     public void newProcess(boolean cpuEmpty) {} //Non-preemtive in this event
 
