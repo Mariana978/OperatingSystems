@@ -36,10 +36,7 @@ public class SJF_P extends Scheduler {
         }
     }
 
-    /**
-     * Selecciona el proceso con MENOR tiempo restante
-     * en el burst actual de CPU (SJF Preemptivo).
-     */
+   
     @Override
     public void getNext(boolean cpuEmpty) {
 
@@ -60,7 +57,6 @@ public class SJF_P extends Scheduler {
 
                     } else if (remaining == minRemaining && selected != null) {
 
-                        // 🔹 Aplicar TieBreaker definido en OS
                         if (os.SCHEDULER_TIEBREAKER_TYPE == TieBreakerType.LARGEST_PID) {
                             if (process.getPid() > selected.getPid()) {
                                 selected = process;
