@@ -12,30 +12,72 @@ import java.util.List;
  *
  * @author prestamour
  */
-public class SJF_P extends Scheduler{
+public class SJF_P extends Scheduler {
 
-    
-    SJF_P(OS os){
+    public SJF_P(OS os) {
         super(os);
-
     }
-    
-    @Override
-    public void newProcess(boolean cpuEmpty){// When a NEW process enters the queue, process in CPU, if any, is extracted to compete with the rest
-        
-    } 
 
     @Override
-    public void IOReturningProcess(boolean cpuEmpty){// When a process return from IO and enters the queue, process in CPU, if any, is extracted to compete with the rest
-        
-    } 
-    
-   
+    public void newProcess(boolean cpuEmpty) {
+        if (!cpuEmpty) {
+            os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, null);
+        }
+    }
+
+    /**
+     * Cuando un proceso regresa de I/O,
+     * si hay proceso en CPU, también debe competir nuevamente.
+     */
+    @Override
+    public void IOReturningProcess(boolean cpuEmpty) {
+        if (!cpuEmpty) {
+            os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, null);
+        }
+    }
+
+    /**
+     * Selecciona el proceso con MENOR tiempo restante
+     * en el burst actual de CPU (SJF Preemptivo).
+     */
     @Override
     public void getNext(boolean cpuEmpty) {
-        
-        //Insert code here
 
-     }
- 
+        if (!processes.isEmpty() && cpuEmpty) {
+
+            int minRemaining = Integer.MAX_VALUE;
+            Process selected = null;
+
+            for (Process process : processes) {
+
+                if (process.isCurrentBurstCPU()) {
+
+                    int remaining = process.getRemainingTimeInCurrentBurst();
+
+                    if (remaining < minRemaining) {
+                        minRemaining = remaining;
+                        selected = process;
+
+                    } else if (remaining == minRemaining && selected != null) {
+
+                        // 🔹 Aplicar TieBreaker definido en OS
+                        if (os.SCHEDULER_TIEBREAKER_TYPE == TieBreakerType.LARGEST_PID) {
+                            if (process.getPid() > selected.getPid()) {
+                                selected = process;
+                            }
+                        } else { // SMALLEST_PID
+                            if (process.getPid() < selected.getPid()) {
+                                selected = process;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (selected != null) {
+                processes.remove(selected);
+                os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, selected);
+            }
+        }
+    }
 }
