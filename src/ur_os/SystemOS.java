@@ -527,11 +527,27 @@ public final class SystemOS implements Runnable{
         return resultado;
     }
     
-    
     public double calcAvgWaitingTime() {
-           //FALTA ESTE!!
-           
-        return 0;
+        double sum = 0;
+        int cont = 0;
+
+        for (Process p : processes) {
+
+            if (p.getState() == ProcessState.FINISHED) {
+
+                int tat = p.getTime_finished() - p.getTime_init();
+                int exec = p.getTotalExecutionTime();
+
+                sum += (tat - exec);
+                cont++;
+            }
+        }
+
+        if (cont == 0) {
+            return 0;
+        }
+
+        return sum / count;
     }
     
     //Everytime a process is taken out from memory, when a interruption occurs
@@ -603,4 +619,5 @@ public final class SystemOS implements Runnable{
     
     
     
+
 }
