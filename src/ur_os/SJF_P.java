@@ -25,10 +25,7 @@ public class SJF_P extends Scheduler {
         }
     }
 
-    /**
-     * Cuando un proceso regresa de I/O,
-     * si hay proceso en CPU, también debe competir nuevamente.
-     */
+    
     @Override
     public void IOReturningProcess(boolean cpuEmpty) {
         if (!cpuEmpty) {
