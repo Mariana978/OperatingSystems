@@ -561,7 +561,7 @@ public final class SystemOS implements Runnable{
         boolean idleBreak = false; // Indica si venimos de un estado -1
 
         for (int currentProcess : execution) {
-            // Caso: El CPU está ocioso (Idle)
+            
             if (currentProcess == -1) {
                 idleBreak = true;
                 continue;
@@ -653,5 +653,6 @@ public final class SystemOS implements Runnable{
     
 
 }
+
 
 
