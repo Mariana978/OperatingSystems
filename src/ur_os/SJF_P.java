@@ -25,7 +25,6 @@ public class SJF_P extends Scheduler {
         }
     }
 
-    
     @Override
     public void IOReturningProcess(boolean cpuEmpty) {
         if (!cpuEmpty) {
