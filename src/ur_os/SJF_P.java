@@ -22,6 +22,7 @@ public class SJF_P extends Scheduler {
     public void newProcess(boolean cpuEmpty) {
         if (!cpuEmpty) {
             os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, null);
+            
         }
     }
 
@@ -29,6 +30,7 @@ public class SJF_P extends Scheduler {
     public void IOReturningProcess(boolean cpuEmpty) {
         if (!cpuEmpty) {
             os.interrupt(InterruptType.SCHEDULER_CPU_TO_RQ, null);
+            
         }
     }
 
@@ -68,6 +70,7 @@ public class SJF_P extends Scheduler {
 
             if (selected != null) {
                 processes.remove(selected);
+                addContextSwitch();
                 os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, selected);
             }
         }
