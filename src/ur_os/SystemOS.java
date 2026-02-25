@@ -552,9 +552,41 @@ public final class SystemOS implements Runnable{
     
     //Everytime a process is taken out from memory, when a interruption occurs
     public double calcAvgContextSwitches() {
-        //FALTA ESTE!!
-           
-        return 0;
+        if (execution.isEmpty() || processes.isEmpty()) {
+            return 0.0; 
+        }
+
+        int contextSwitches = 0;
+        Integer lastProcess = null;
+        boolean idleBreak = false; // Indica si venimos de un estado -1
+
+        for (int currentProcess : execution) {
+            // Caso: El CPU está ocioso (Idle)
+            if (currentProcess == -1) {
+                idleBreak = true;
+                continue;
+            }
+
+            
+            if (lastProcess == null) {
+                contextSwitches++;
+                lastProcess = currentProcess;
+                idleBreak = false; // Reset de la bandera tras retomar ejecución
+            } 
+            
+            else if (idleBreak) {
+                contextSwitches++;
+                lastProcess = currentProcess;
+                idleBreak = false;
+            }
+            
+            else if (currentProcess != lastProcess) {
+                contextSwitches++;
+                lastProcess = currentProcess;
+            }
+        }
+
+        return (double) contextSwitches / processes.size();
     }
     
     
@@ -621,4 +653,5 @@ public final class SystemOS implements Runnable{
     
 
 }
+
 
