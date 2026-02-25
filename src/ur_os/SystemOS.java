@@ -547,7 +547,7 @@ public final class SystemOS implements Runnable{
             return 0;
         }
 
-        return sum / count;
+        return sum / cont;
     }
     
     //Everytime a process is taken out from memory, when a interruption occurs
@@ -621,3 +621,4 @@ public final class SystemOS implements Runnable{
     
 
 }
+
