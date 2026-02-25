@@ -592,9 +592,13 @@ public final class SystemOS implements Runnable{
     
     //Just context switches based on the execution timeline
     public double calcAvgContextSwitches2() {
-        //FALTA ESTE!!
-           
-        return 0;
+        if (processes.isEmpty() || os == null) {
+            return 0.0;
+        }
+        
+        int totalSwitches = os.rq.getTotalContextSwitches();
+
+        return (double) totalSwitches / processes.size();
     }
     
     
@@ -653,6 +657,7 @@ public final class SystemOS implements Runnable{
     
 
 }
+
 
 
 
