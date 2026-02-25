@@ -19,7 +19,7 @@ public class RoundRobin extends Scheduler{
     
     RoundRobin(OS os){
         super(os);
-        q = 5;
+        q = 5; //OJOO: Nuestro quantum es de 5. Mariana tenlo en cuenta para los casos
         cont=0;
     }
     
@@ -31,11 +31,10 @@ public class RoundRobin extends Scheduler{
     RoundRobin(OS os, int q, boolean multiqueue){
         this(os);
         this.q = q;
-        this.multiqueue = multiqueue;
+        this.multiqueue = multiqueue;//Por si algo, para la otra entrega, constructor para la multicola
     }
     
-
-    
+    //Reiniciar el contador del quantum
     void resetCounter(){
         cont=0;
     }
@@ -44,17 +43,17 @@ public class RoundRobin extends Scheduler{
     public void getNext(boolean cpuEmpty) {
         //si CPU vacío
         if (cpuEmpty) {
-            if (!processes.isEmpty()) {
-                Process siguiente = processes.removeFirst();
-                os.interrupt(SCHEDULER_RQ_TO_CPU, siguiente);
+            if (!processes.isEmpty()) {//Si hay procesos en la ready queue
+                Process siguiente = processes.removeFirst();//Primer proceso
+                os.interrupt(SCHEDULER_RQ_TO_CPU, siguiente);//a la cpu!!
                 addContextSwitch();
                 resetCounter();
             }
             return;
         }
-        // CPU ocupaditoo
+        // CPU ocupaditaa
         cont++;
-        Process actual = os.getProcessInCPU();
+        Process actual = os.getProcessInCPU();//Quién está en la cpu??
         if (actual.isFinished()) {
             resetCounter();
             return;
@@ -66,7 +65,7 @@ public class RoundRobin extends Scheduler{
         // Se acabó el quantum
         if (!processes.isEmpty()) {
             Process siguiente = processes.removeFirst();
-            os.interrupt(SCHEDULER_CPU_TO_RQ, siguiente);
+            os.interrupt(SCHEDULER_CPU_TO_RQ, siguiente);//OJO, interrupción para sacar proceso actual y poner el nuevo proceso
             addContextSwitch();
         }
         resetCounter();
