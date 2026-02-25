@@ -39,7 +39,7 @@ public class SJF_NP extends Scheduler{
 
         processes.remove(shortest);
         os.interrupt(InterruptType.SCHEDULER_RQ_TO_CPU, shortest);
-        
+        addContextSwitch();
         //Insert code here
         
     }
@@ -51,4 +51,6 @@ public class SJF_NP extends Scheduler{
     public void IOReturningProcess(boolean cpuEmpty) {} //Non-preemtive
     
 }
+
+
 
